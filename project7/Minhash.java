@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Minhash {
-    private static final int numHashes = 32;
+    private static final int numHashes = 42;
 
     public double jaccard(String fileA, String fileB) {
         try {
@@ -48,10 +48,16 @@ public class Minhash {
         int[][] minHashValues = new int[numHashes][2];
         Random rand = new Random();
         int nextPrime = 429496731;
-
+        Set<Integer> usedHashValues = new HashSet<>();
         for (int i = 0; i < numHashes; i++) {
-            int a = rand.nextInt(nextPrime - 1) + 1;
-            int b = rand.nextInt(nextPrime);
+          int a, b;
+          do {
+              a = rand.nextInt(nextPrime - 1) + 1;
+              b = rand.nextInt(nextPrime);
+          } while (usedHashValues.contains(a) || usedHashValues.contains(b));
+          
+          usedHashValues.add(a);
+          usedHashValues.add(b);
             int hashCode1 = Integer.MAX_VALUE;
             int hashCode2 = Integer.MAX_VALUE;
 
