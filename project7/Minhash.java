@@ -13,11 +13,11 @@ public class Minhash {
     public double jaccard(String fileA, String fileB) {
         try {
             // Convert documents to sets of shingles
-            Set<String> shingles1 = getShinglesFromFile(fileA);
-            Set<String> shingles2 = getShinglesFromFile(fileB);
+            Set<String> file1_word = getWordsFile(fileA);
+            Set<String> file2_word = getWordsFile(fileB);
 
             // Generate MinHash signatures
-            int[][] minHashValues = generateMinHashSignatures(shingles1, shingles2);
+            int[][] minHashValues = generateMinHashSignatures(file1_word,file2_word);
 
             // Compare MinHash signatures
             double estJaccardSim = calculateEstimatedJaccardSimilarity(minHashValues);
@@ -31,20 +31,20 @@ public class Minhash {
         return 0.0;
     }
 
-    private Set<String> getShinglesFromFile(String file) throws IOException {
-        Set<String> shingles = new HashSet<>();
+    private Set<String> getWordsFile(String file) throws IOException {
+        Set<String> words = new HashSet<>();
 
         BufferedReader dataReader = new BufferedReader(new FileReader(file));
         String line;
         while ((line = dataReader.readLine()) != null) {
-            shingles.add(line);
+            words.add(line);
         }
         dataReader.close();
 
-        return shingles;
+        return words;
     }
 
-    private int[][] generateMinHashSignatures(Set<String> shingles1, Set<String> shingles2) {
+    private int[][] generateMinHashSignatures(Set<String> file1_word, Set<String> file2_word) {
         int[][] minHashValues = new int[numHashes][2];
         Random rand = new Random();
         int nextPrime = 429496731;
@@ -61,15 +61,15 @@ public class Minhash {
             int hashCode1 = Integer.MAX_VALUE;
             int hashCode2 = Integer.MAX_VALUE;
 
-            for (String shingle : shingles1) {
-                int shingleHash = shingle.hashCode();
-                int hashCode = (a * shingleHash + b) % nextPrime;
+            for (String word : file1_word) {
+                int wordHash = word.hashCode();
+                int hashCode = (a * wordHash + b) % nextPrime;
                 hashCode1 = Math.min(hashCode1, hashCode);
             }
 
-            for (String shingle : shingles2) {
-                int shingleHash = shingle.hashCode();
-                int hashCode = (a * shingleHash + b) % nextPrime;
+            for (String word : file2_word) {
+                int wordHash = word.hashCode();
+                int hashCode = (a * wordHash + b) % nextPrime;
                 hashCode2 = Math.min(hashCode2, hashCode);
             }
 
