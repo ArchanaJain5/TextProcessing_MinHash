@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Minhash {
-    private static final int numHashes = 42;
+    private static final int numHashes = 52;
 
     public double jaccard(String fileA, String fileB) {
         try {
